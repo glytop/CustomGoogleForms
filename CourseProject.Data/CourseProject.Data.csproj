@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CourseProject.Interface\CourseProject.Interface.csproj" />
+    <ProjectReference Include="..\Enums\Enums.csproj" />
   </ItemGroup>
 
   <ItemGroup>

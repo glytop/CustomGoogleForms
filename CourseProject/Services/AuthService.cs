@@ -1,4 +1,5 @@
 ﻿using CourseProject.Attributes;
+using Enums;
 
 namespace CourseProject.Services
 {
@@ -11,6 +12,7 @@ namespace CourseProject.Services
         public const string CLAIM_TYPE_ID = "Id";
         public const string CLAIM_TYPE_NAME = "Name";
         public const string CLAIM_TYPE_IS_BLOCKED = "IsBlocked";
+        public const string CLAIM_TYPE_ROLE = "Role";
 
         public AuthService(IHttpContextAccessor httpContextAccessor)
         {
@@ -36,6 +38,28 @@ namespace CourseProject.Services
         public string GetName()
         {
             return GetClaimValue(CLAIM_TYPE_NAME) ?? "Гость";
+        }
+
+        public bool IsAdmin()
+        {
+            return IsAuthenticated() && GetRole().HasFlag(Role.Admin);
+        }
+
+        public bool HasRole(Role role)
+        {
+            return IsAuthenticated() && GetRole().HasFlag(role);
+        }
+
+        public Role GetRole()
+        {
+            var roleStr = GetClaimValue(CLAIM_TYPE_ROLE);
+            if (roleStr is null)
+            {
+                throw new Exception("Guest cant has a role");
+            }
+            var roleInt = int.Parse(roleStr);
+            var role = (Role)roleInt;
+            return role;
         }
 
         public Guid? GetUserId()

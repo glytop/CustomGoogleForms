@@ -53,6 +53,7 @@ namespace CourseProject.Controllers
                 new Claim(AuthService.CLAIM_TYPE_ID, user.Id.ToString()),
                 new Claim(AuthService.CLAIM_TYPE_NAME, user.Name),
                 new Claim(AuthService.CLAIM_TYPE_IS_BLOCKED, user.IsBlocked.ToString()),
+                new Claim(AuthService.CLAIM_TYPE_ROLE, ((int)user.Role).ToString()),
                 new Claim (ClaimTypes.AuthenticationMethod, AuthService.AUTH_TYPE_KEY),
 
             };
