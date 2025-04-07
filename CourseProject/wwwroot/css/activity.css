@@ -1,0 +1,109 @@
+.activity-chart {
+    display: flex;
+    align-items: flex-end;
+    height: 30px;
+    gap: 3px;
+}
+
+.activity-bar {
+    flex: 1;
+    background-color: #ced4da;
+    border-radius: 2px;
+    min-height: 5px;
+    max-width: 8px;
+    margin: 0 auto;
+}
+
+    .activity-bar:nth-child(odd) {
+        background-color: #b6c9f0;
+    }
+
+    .activity-bar:nth-child(even) {
+        background-color: #d2dffa;
+    }
+
+.btn-outline-primary {
+    color: #2563EB;
+    border-color: #2563EB;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #2563EB;
+        border-color: #2563EB;
+    }
+
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.strikethrough {
+    color: #6c757d;
+}
+
+.timestamp-popup {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #1e2023;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+    .timestamp-popup.show {
+        opacity: 1;
+    }
+
+    .timestamp-popup:after {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        left: 20px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #1e2023 transparent;
+    }
+
+#filterInput:focus {
+    box-shadow: none;
+    border-color: #2563EB;
+}
+
+.table th {
+    font-weight: 600;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.table td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.form-check-input:checked {
+    background-color: #2563EB;
+    border-color: #2563EB;
+}
+
+.form-check-input:focus {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}
+
+@media (max-width: 767.98px) {
+    .activity-chart {
+        height: 25px;
+    }
+
+    .container-fluid {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}

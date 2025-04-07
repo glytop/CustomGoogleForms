@@ -1,13 +1,29 @@
+using CourseProject.CustomMiddleware;
 using CourseProject.Data;
+using CourseProject.Data.Repositories;
+using CourseProject.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddAuthentication(AuthService.AUTH_TYPE_KEY)
+    .AddCookie(AuthService.AUTH_TYPE_KEY, config =>
+    {
+        config.LoginPath = "/Auth/Login";
+        config.AccessDeniedPath = "/Auth/Login";
+        config.LogoutPath = "/Auth/Logout";
+    });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<WebDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register in DI container
+builder.Services.AddScoped<IUserRepositoryReal, UserRepository>();
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -28,6 +44,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+app.UseMiddleware<BlockedUserMiddleware>();
 app.UseAuthorization();
 
 

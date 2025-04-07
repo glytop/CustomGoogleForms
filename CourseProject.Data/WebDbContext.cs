@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CourseProject.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Data
 {
@@ -8,8 +9,14 @@ namespace CourseProject.Data
         {
         }
 
+        public DbSet<UserData> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<UserData>()
+                .HasIndex(m => m.Email)
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
         }
     }
