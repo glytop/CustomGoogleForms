@@ -70,12 +70,6 @@ namespace CourseProject.Controllers
         [HttpPost]
         public IActionResult UpdateRoles(Dictionary<Guid, List<Role>> updatedRoles)
         {
-            if (updatedRoles == null || !updatedRoles.Any())
-            {
-                TempData["ErrorMessage"] = "Роли не переданы!";
-                return RedirectToAction("Activity");
-            }
-
             _userRepository.UpdateRoles(updatedRoles);
             TempData["SuccessMessage"] = "The user(s) role(s) has been successfully updated!";
             return RedirectToAction("Activity");

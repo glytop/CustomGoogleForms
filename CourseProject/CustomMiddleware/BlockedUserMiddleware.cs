@@ -1,5 +1,6 @@
 ﻿using CourseProject.Data.Repositories;
 using CourseProject.Services;
+using Enums;
 using Microsoft.AspNetCore.Authentication;
 
 namespace CourseProject.CustomMiddleware
@@ -40,7 +41,7 @@ namespace CourseProject.CustomMiddleware
                         {
                             var user = userRepository.GetById(userId.Value);
 
-                            if (user is null || user.IsBlocked)
+                            if (user is null || user.IsBlocked || !user.Role.HasFlag(Role.Admin))
                             {
                                 await context.SignOutAsync(AuthService.AUTH_TYPE_KEY);
                                 context.Response.Redirect("/Auth/Login");
