@@ -70,7 +70,7 @@ namespace CourseProject.Controllers
 
             TempData["SuccessMessage"] = "Successful authorization";
 
-            return RedirectToAction("Activity", "Table");
+            return RedirectToAction("Activity", "Admin");
         }
 
         [HttpGet]

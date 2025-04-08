@@ -1,7 +1,9 @@
-﻿@using System.Globalization
-@model List<UserViewModel>
+﻿@using CourseProject.Models
+@using System.Globalization
+@model AdminUserViewModel
+
 @section Scripts {
-    <script src="~/js/activity.js"></script>
+<script src="~/js/activity.js"></script>
 }
 
 <div class="container-fluid mt-4">
@@ -9,14 +11,17 @@
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="d-flex m-2">
-                    <button formaction="/Table/Block" type="submit" class="btn btn-outline-primary me-2">
+                    <button formaction="/Admin/Block" type="submit" class="btn btn-outline-primary me-2">
                         <i class="bi bi-lock-fill"></i> Block
                     </button>
-                    <button formaction="/Table/Unblock" type="submit" class="btn btn-outline-primary me-2">
+                    <button formaction="/Admin/Unblock" type="submit" class="btn btn-outline-primary me-2">
                         <i class="bi bi-unlock"></i>
                     </button>
-                    <button formaction="/Table/Delete" type="submit" class="btn btn-outline-danger me-2">
+                    <button formaction="/Admin/Delete" type="submit" class="btn btn-outline-danger me-2">
                         <i class="bi bi-trash"></i>
+                    </button>
+                    <button type="submit" formaction="/Admin/UpdateRoles" class="btn btn-outline-success">
+                        <i class="bi bi-shield-fill-check"></i> Update Roles
                     </button>
                 </div>
             </div>
@@ -45,36 +50,44 @@
                         <th>Name</th>
                         <th>Email <i class="bi bi-arrow-down-short text-muted"></i></th>
                         <th>Last seen</th>
+                        <th>Role</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var user in Model)
-                    {
-                        var lastSeen = (DateTime.UtcNow - user.LastLoginTime).TotalMinutes;
-                        var lastSeenText = lastSeen < 1 ? "less than a minute ago" :
-                        lastSeen < 60 ? $"{(int)lastSeen} minutes ago" :
-                        lastSeen < 1440 ? $"{(int)(lastSeen / 60)} hours ago" :
-                        $"{(int)(lastSeen / 1440)} days ago";
+                        @foreach (var user in Model.Users)
+                        {
+                            var lastSeen = (DateTime.UtcNow - user.LastLoginTime).TotalMinutes;
+                            var lastSeenText = lastSeen < 1 ? "less than a minute ago" :
+                            lastSeen < 60 ? $"{(int)lastSeen} minutes ago" :
+                            lastSeen < 1440 ? $"{(int)(lastSeen / 60)} hours ago" :
+                            $"{(int)(lastSeen / 1440)} days ago";
 
-                        <tr>
-                            <td class="text-center align-middle">
-                                <div class="form-check">
-                                    <input class="form-check-input user-select" type="checkbox" name="id" value="@user.Id">
-                                </div>
+                            <tr>
+                                <td class="text-center align-middle">
+                                    <div class="form-check">
+                                        <input class="form-check-input user-select" type="checkbox" name="id" value="@user.Id">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold @(user.IsBlocked ? "text-decoration-line-through": "")">@user.Name</div>
+                                </td>
+                                <td class="align-middle">@user.Email</td>
+                                <td class="align-middle position-relative">
+                                    @lastSeenText
+                                    <div class="timestamp-popup">
+                                        @user.LastLoginTime.ToString("MMMM dd, yyyy HH:mm:ss", new CultureInfo("en-US"))
+                                    </div>
+                                </td>
+                            <td class="align-middle">
+                                @foreach (var role in Model.Roles)
+                                {
+                                    <input type="checkbox" name="updatedRoles[@user.Id]" value="@role.Value"
+                                    @(user.Roles.Contains(role.Text) ? "checked" : "")>
+                                    <label>@role.Text</label>
+                                }
                             </td>
-                            <td>
-                                <div class="fw-bold @(user.IsBlocked ? "text-decoration-line-through": "")">@user.Name</div>
-                                <div class="text-muted">N/A</div>
-                            </td>
-                            <td class="align-middle">@user.Email</td>
-                            <td class="align-middle position-relative">
-                                @lastSeenText
-                                <div class="timestamp-popup">
-                                    @user.LastLoginTime.ToString("MMMM dd, yyyy HH:mm:ss", new CultureInfo("en-US"))
-                                </div>
-                            </td>
-                        </tr>
-                    }
+                            </tr>
+                        }
                 </tbody>
             </table>
         </div>

@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using CourseProject.Models;
 
 namespace CourseProject.Controllers;
 

@@ -1,5 +1,6 @@
 ﻿using CourseProject.Data.Models;
 using CourseProject.Interface.Repositories;
+using Enums;
 using System.Data;
 
 namespace CourseProject.Data.Repositories
@@ -10,10 +11,10 @@ namespace CourseProject.Data.Repositories
         public void UnblockUsers(List<Guid> id);
         public void DeleteUsers(List<Guid> id);
         UserData? Login(string email, string password);
-        void Register(string name, string email, string password);
+        void Register(string name, string email, string password, Role role = Role.User);
         bool CheckIsEmailAvailable(string email);
-
-
+        void UpdateRoles(Dictionary<Guid, List<Role>> updatedRoles);
+        bool IsAdminExist();
     }
     public class UserRepository : BaseRepository<UserData>, IUserRepositoryReal
     {
@@ -82,7 +83,7 @@ namespace CourseProject.Data.Repositories
             return _dbSet.FirstOrDefault(x => x.Email == email && x.Password == password);
         }
 
-        public void Register(string name, string email, string password)
+        public void Register(string name, string email, string password, Role role = Role.User)
         {
             if (_dbSet.Any(x => x.Email == email))
             {
@@ -94,6 +95,7 @@ namespace CourseProject.Data.Repositories
                 Name = name,
                 Email = email,
                 Password = password,
+                Role = role,
                 IsBlocked = false,
                 LastLoginTime = DateTime.UtcNow
             };
@@ -105,6 +107,27 @@ namespace CourseProject.Data.Repositories
         public bool CheckIsEmailAvailable(string email)
         {
             return !_dbSet.Any(x => x.Email == email);
+        }
+
+        public void UpdateRoles(Dictionary<Guid, List<Role>> updatedRoles)
+        {
+            var users = _webDbContext.Users
+                .AsEnumerable()
+                .Where(u => updatedRoles.ContainsKey(u.Id))
+                .ToList();
+
+            foreach (var user in users)
+            {
+                var roles = updatedRoles[user.Id];
+                user.Role = roles.Any() ? roles.Aggregate((current, next) => current | next) : Role.User;
+            }
+
+            _webDbContext.SaveChanges();
+        }
+
+        public bool IsAdminExist()
+        {
+            return _dbSet.Any(x => x.Role.HasFlag(Role.Admin));
         }
     }
 }

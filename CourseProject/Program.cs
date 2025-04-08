@@ -24,11 +24,15 @@ builder.Services.AddDbContext<WebDbContext>(options =>
 // Register in DI container
 builder.Services.AddScoped<IUserRepositoryReal, UserRepository>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<EnumHelper>();
 
 builder.Services.AddHttpContextAccessor();
 
 
 var app = builder.Build();
+
+var seed = new Seed();
+seed.Fill(app.Services);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
